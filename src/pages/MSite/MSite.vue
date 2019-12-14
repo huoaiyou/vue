@@ -1,7 +1,7 @@
 <template>
   <section class="msite">
     <!--首页头部-->
-    <Header title="xxx">
+    <Header :title="address.name">
       <span class="header_login" slot="right">
         <span class="header_login_text">登录|注册</span>
       </span>
@@ -311,15 +311,23 @@
 <script type="text/ecmascript-6">
 import Swiper from "swiper"
 import 'swiper/css/swiper.css'
+// import {reqAddress} from '../../api'
+import {mapState} from 'vuex'
   export default {
     mounted(){
       this.$store.dispatch('getAddress')
+      // this.$store.dispatch('getCategorys')
+      // this.$store.dispatch('getShops')
+      // reqAddress(116.36867,40.10038)
       new Swiper('.swiper-container',{
         loop: true,
         pagination:{
           el: '.swiper-pagination',
         }
       })
+    },
+    computed:{
+      ...mapState(['address'])
     }
   }
 </script>
