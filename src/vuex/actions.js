@@ -25,6 +25,7 @@ export default {
     if(result.code === 0){
       const categorys = result.data
       commit(RECEIVE_CATEGORYS,categorys)
+      // callback()
     }
   },
   async getShops({commit,state}){
