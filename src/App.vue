@@ -10,6 +10,9 @@ import Footer from './components/Footer/Footer.vue'
 export default {
   components: {
     Footer
+  },
+  mounted(){
+    this.$store.dispatch('autoLogin')
   }
 }
 </script>

@@ -19,7 +19,7 @@
               >{{obtainCode}}</button>
             </section>
             <section class="login_verification">
-              <input type="tel" maxlength="8" placeholder="验证码" v-model="scode" name="myscode" v-validate="'required'">
+              <input type="tel" maxlength="8" placeholder="验证码" v-model="code" name="myscode" v-validate="'required'">
               <span style="color: red;" v-show="errors.has('myscode')">{{ errors.first('myscode') }}</span>
             </section>
             <section class="login_hint">
@@ -30,7 +30,7 @@
           <div :class="{on:!isShowSms}">
             <section>
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名" v-model="users" name="users" v-validate="'required'">
+                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名" v-model="name" name="users" v-validate="'required'">
                 <span style="color: red;" v-show="errors.has('users')">{{ errors.first('users') }}</span>
               </section>
               <section class="login_verification">
@@ -42,7 +42,7 @@
                 </div>
               </section>
               <section class="login_message">
-                <input type="text" maxlength="11" placeholder="验证码" v-model="code" name="mycode" v-validate="'required'">
+                <input type="text" maxlength="11" placeholder="验证码" v-model="captcha" name="mycode" v-validate="'required'">
                 <span style="color: red;" v-show="errors.has('mycode')">{{ errors.first('mycode') }}</span>
                 <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha" @click="updateCaptcha" ref="captcha">
               </section>
@@ -55,21 +55,24 @@
       <a href="javascript:" class="go_back" @click="$router.back()">
         <i class="iconfont icon-jiantou2"></i>
       </a>
+      <p>{{$t('message')}}</p>
+      <button @click="change">切换语言</button>
     </div>
   </section>
 </template>
 
 <script type="text/ecmascript-6">
+import { Toast, MessageBox } from "mint-ui";
   export default {
     data(){
       return {
         isShowSms: true,
         isShowPwd: false,
         phone: '',
-        scode:'',
-        users: '',
+        code: '', 
+        name: '',   
         pwd: '',
-        code: '',    
+        captcha: '', 
         obtainCode: '获取验证码',
         time: 0,
         captcha: '',
@@ -83,7 +86,7 @@
       }
     },
     methods:{
-      sendCode(){
+      async sendCode(){
         this.time = 10
         const timer = setInterval(() => {
           
@@ -96,12 +99,42 @@
           }
         }, 1000);
         
+        const result = await this.$API.reqSendCode(this.phone)
+        if(result.code === 0){
+          Toast('短信验证码发送成功')
+        }else{
+          this.time = 0
+          MessageBox('提示',result.mag || '短信验证码发送失败')
+        }
       },
       async login(){
+        let success
         if(this.isShowSms){
-          const success = await this.$validator.validateAll(['myphone','myscode']) //该promise验证完成即成功
+          success = await this.$validator.validateAll(['myphone','myscode']) //该promise验证完成即成功
         }else{
-          const success = await this.$validator.validateAll(['users','mypwd','mycode'])
+          success = await this.$validator.validateAll(['users','mypwd','mycode'])
+        }
+        // console.log(success);
+        
+        let result
+        if(success){
+          const {isShowSms,phone,code,name,pwd,captcha} = this
+          if(isShowSms){
+            result = await this.$API.reqSmsLogin(phone,code)
+          }else{
+            result = await this.$API.reqPwdLogin({name,pwd,captcha})
+          }
+          this.updateCaptcha()
+          this.captcha = ''
+        }
+
+        if(result.code === 0){
+          const user = result.data
+          this.$store.dispatch('saveUser',user)
+
+          this.$router.replace('/profile')
+        }else{
+          MessageBox('提示',result.msg);
         }
       },
       updateCaptcha(){
@@ -113,6 +146,13 @@
         }, 2000);
         }
         
+      },
+      change(){
+        const locale = this.$i18n.locale === 'en'?'zh_CN':'en'
+        console.log(locale);
+        
+        this.$i18n.locale = locale
+        localStorage.setItem('locale_key', locale)
       }
     }
   }

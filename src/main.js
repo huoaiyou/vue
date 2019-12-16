@@ -5,10 +5,12 @@ import router from './router'
 import 'lib-flexible/flexible'
 import Header from './components/Header/Header.vue'
 import Score from './components/Score/Score.vue'
-
 import store from './vuex/store.js'
 import zh_CN from 'vee-validate/dist/locale/zh_CN'
+import i18n from './i18n'
+import * as API from '@/api'
 
+Vue.prototype.$API = API
 Vue.use(VeeValidate)
 
 VeeValidate.Validator.localize('zh_CN', {
@@ -35,7 +37,8 @@ Vue.component("Score",Score)
 new Vue({
   render: h => h(App),
   router,
-  store,
+  i18n,
+  store
 }).$mount('#app')
 
 

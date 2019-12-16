@@ -1,13 +1,16 @@
 import {
   reqAddress,
   reqCategorys,
-  reqShops  
+  reqShops, 
+  reqAutoLogin 
 } from '../api'
 
 import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
-  RECEIVE_SHOPS
+  RECEIVE_SHOPS,
+  SAVE_USER,
+  SAVE_TOKEN,
 } from './mutation-types'
 
 export default {
@@ -37,4 +40,27 @@ export default {
       commit(RECEIVE_SHOPS,shops)
     }
   },
+
+  saveUser ({commit}, user){
+    const token = user.token
+    localStorage.setItem('token_key',token)
+    delete user.token
+
+    commit(SAVE_USER,{user})
+    commit(SAVE_TOKEN,{token})
+  },
+  async autoLogin({commit,state}){
+    if(state.token && !state.user._id){
+      const result = await reqAutoLogin()
+      if(result.code === 0){
+        const user = result.data
+        commit(SAVE_USER,{user})
+      }
+    }
+  },
+  logout ({commit}) {
+    localStorage.removeItem('token_key')
+    commit(SAVE_USER)
+    commit(SAVE_TOKEN)
+  }
 }

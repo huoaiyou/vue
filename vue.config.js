@@ -6,16 +6,18 @@ const postcss = px2rem({
 
 
 module.exports = {
-  lintOnSave: false, 
-    css: { // 添加postcss配置
-      loaderOptions: {
-        postcss: {
-          plugins: [
-            postcss
-          ]
-        }
+  lintOnSave: false,
+
+  css: { // 添加postcss配置
+    loaderOptions: {
+      postcss: {
+        plugins: [
+          postcss
+        ]
       }
-  },
+    }
+},
+
   configureWebpack:{
     devServer: {
       proxy:{
@@ -28,7 +30,15 @@ module.exports = {
         }
       }
     }
+  },
+
+  pluginOptions: {
+    i18n: {
+      locale: 'zh_CN',
+      fallbackLocale: 'en',
+      localeDir: 'locales',
+      enableInSFC: false
+    }
   }
-  
 }
 
