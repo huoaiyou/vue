@@ -88,14 +88,14 @@
         </div>
       </a>
     </section>
-    <mt-button type="danger" @click="logout">退出登录</mt-button>
+    <mt-button style="width:100%" type="danger" @click="logout" v-show="this.user._id">退出登录</mt-button>
   </section>
 </template>
 
 <script type="text/ecmascript-6">
 import Vue from 'vue'
 import {mapState} from 'vuex'
-import { Button } from 'mint-ui';
+import { Button, MessageBox } from 'mint-ui';
 Vue.component(Button.name, Button);
   export default {
     computed:{
@@ -103,7 +103,9 @@ Vue.component(Button.name, Button);
     },
     methods:{
       logout(){
-        this.$store.dispatch('logout')
+        MessageBox.confirm('确定退出?').then(action => {
+          this.$store.dispatch('logout')
+        });
       }
     }
   }
