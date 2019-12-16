@@ -11,6 +11,8 @@ import {
   RECEIVE_SHOPS,
   SAVE_USER,
   SAVE_TOKEN,
+  RESET_USER,
+  RESET_TOKEN
 } from './mutation-types'
 
 export default {
@@ -60,7 +62,7 @@ export default {
   },
   logout ({commit}) {
     localStorage.removeItem('token_key')
-    commit(SAVE_USER)
-    commit(SAVE_TOKEN)
+    commit(RESET_USER)
+    commit(RESET_TOKEN)
   }
 }
