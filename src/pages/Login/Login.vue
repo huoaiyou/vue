@@ -14,7 +14,7 @@
             <section class="login_message">
               <input type="tel" maxlength="11" placeholder="手机号" v-model="phone" name="myphone" v-validate="'required|mobile'">
               <span style="color: red;" v-show="errors.has('myphone')">{{ errors.first('myphone') }}</span>
-              <button :disabled="!isRightPhone" class="get_verification"
+              <button :disabled="!isRightPhone || time>0" class="get_verification"
               :class="{right_phone_number:isRightPhone}" @click.prevent="sendCode"
               >{{obtainCode}}</button>
             </section>
@@ -44,7 +44,7 @@
               <section class="login_message">
                 <input type="text" maxlength="11" placeholder="验证码" v-model="code" name="mycode" v-validate="'required'">
                 <span style="color: red;" v-show="errors.has('mycode')">{{ errors.first('mycode') }}</span>
-                <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha" @click="updateCaptcha" ref="captcha">
               </section>
             </section>
           </div>
@@ -70,7 +70,10 @@
         users: '',
         pwd: '',
         code: '',    
-        obtainCode: '获取验证码',  
+        obtainCode: '获取验证码',
+        time: 0,
+        captcha: '',
+        iscaptcha: true
       }
     },
     computed:{
@@ -81,14 +84,12 @@
     },
     methods:{
       sendCode(){
-        // alert('2222')
-        let time = 10
-        
+        this.time = 10
         const timer = setInterval(() => {
-          console.log('111111');
-          if(time > 0){
-            time--
-            this.obtainCode = `短信已发送(${time}s)`
+          
+          if(this.time > 0){
+            this.time--
+            this.obtainCode = `短信已发送(${this.time}s)`
           }else{
             clearInterval(timer)
             this.obtainCode = '获取验证码'
@@ -98,10 +99,20 @@
       },
       async login(){
         if(this.isShowSms){
-          const success = await this.$validator.validateAll(['myphone','myscode'])
+          const success = await this.$validator.validateAll(['myphone','myscode']) //该promise验证完成即成功
         }else{
           const success = await this.$validator.validateAll(['users','mypwd','mycode'])
         }
+      },
+      updateCaptcha(){
+        if(this.iscaptcha){
+          this.iscaptcha = false
+          this.$refs.captcha.src = 'http://localhost:4000/captcha?time='+ Date.now()
+          setTimeout(() => {
+          this.iscaptcha = true
+        }, 2000);
+        }
+        
       }
     }
   }

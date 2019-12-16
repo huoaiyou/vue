@@ -19,17 +19,21 @@
         const starArr = []
         const fullStar = Math.floor(score)
         let halfStar = score*10 % 10 >= 5 ? 1 : 0
-        const grayStar = 5 - fullStar - halfStar
-        console.log(score,fullStar,halfStar,grayStar);
+        // const grayStar = 5 - fullStar - halfStar
+        console.log(score,fullStar,halfStar);
         for(let i=0; i<fullStar; i++){
           starArr.push('on')
         }
         if(halfStar){
           starArr.push('half')
-        }else if(!grayStar){
-          starArr.push('off')
         }
-        for(let i=0; i<grayStar; i++){
+        // else if(!grayStar){
+        //   starArr.push('off')
+        // }
+        // for(let i=0; i<grayStar; i++){
+        //   starArr.push('off')
+        // }
+        while(starArr.length<5){
           starArr.push('off')
         }
         return starArr
