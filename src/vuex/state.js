@@ -6,4 +6,7 @@ export default {
   shops: [], //商家数组
   user: {},
   token: localStorage.getItem('token_key') || '',
+  goods:[],
+  ratings:[],
+  info:{}
 }

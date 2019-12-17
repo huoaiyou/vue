@@ -2,7 +2,10 @@ import {
   reqAddress,
   reqCategorys,
   reqShops, 
-  reqAutoLogin 
+  reqAutoLogin,
+  reqGoods,
+  reqRatings,
+  reqInfo 
 } from '../api'
 
 import {
@@ -12,7 +15,10 @@ import {
   SAVE_USER,
   SAVE_TOKEN,
   RESET_USER,
-  RESET_TOKEN
+  RESET_TOKEN,
+  RECERVE_GOODS,
+  RECERVE_RATINGS,
+  RECERVE_INFO,
 } from './mutation-types'
 
 export default {
@@ -64,5 +70,31 @@ export default {
     localStorage.removeItem('token_key')
     commit(RESET_USER)
     commit(RESET_TOKEN)
+  },
+  async getGoods({commit},cb){
+    const result = await reqGoods()
+    if(result.code === 0){
+      const goods = result.data
+      // console.log(result)
+
+      commit(RECERVE_GOODS,{goods})
+      typeof cb==='function' && cb()
+    }
+  },
+  async getInfo({commit},cb){
+    const result = await reqInfo()
+    if(result.code === 0){
+      const info = result.data
+      commit(RECERVE_INFO,{info})
+      typeof cb==='function' && cb()
+    }
+  },
+  async getRatings({commit},cb){
+    const result = await reqRatings()
+    if(result.code === 0){
+      const ratings = result.data
+      commit(RECERVE_RATINGS,{ratings})
+      typeof cb==='function' && cb()
+    }
   }
 }

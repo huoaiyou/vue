@@ -21,6 +21,15 @@ export const reqPwdLogin = ({name,pwd,captcha}) => ajax.post('/login_pwd',{name,
 // 自动登录
 export const reqAutoLogin = () => ajax('/auto_login')
 
+//mock商品列表
+export const reqGoods = () => ajax('/goods')
+
+//mock评论
+export const reqRatings = () => ajax('/ratings')
+
+//mock商家
+export const reqInfo = () => ajax('/info')
+
 
 
 

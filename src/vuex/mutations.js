@@ -5,7 +5,10 @@ import {
   SAVE_TOKEN,
   SAVE_USER,
   RESET_USER,
-  RESET_TOKEN
+  RESET_TOKEN,
+  RECERVE_GOODS,
+  RECERVE_RATINGS,
+  RECERVE_INFO,
 } from './mutation-types'
 
 export default {
@@ -30,4 +33,13 @@ export default {
   [RESET_USER] (state) {
     state.user = {}
   },
+  [RECERVE_GOODS](state,{goods}){
+    state.goods = goods
+  },
+  [RECERVE_RATINGS](state,{ratings}){
+    state.ratings = ratings
+  },
+  [RECERVE_INFO](state,{info}){
+    state.info = info
+  }
 }

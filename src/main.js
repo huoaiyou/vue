@@ -9,6 +9,7 @@ import store from './vuex/store.js'
 import zh_CN from 'vee-validate/dist/locale/zh_CN'
 import i18n from './i18n'
 import * as API from '@/api'
+import './mock/mockServer.js'
 
 Vue.prototype.$API = API
 Vue.use(VeeValidate)
