@@ -7,7 +7,8 @@ import {
   RECERVE_RATINGS,
   RECERVE_INFO,
   ADD_FOOD_COUNT,
-  REDUCE_FOOD_COUNT
+  REDUCE_FOOD_COUNT,
+  DELETE_FOODS
 } from '../mutation-types'
 
 import {
@@ -20,7 +21,8 @@ export default {
   state:{ 
     goods:[],
     ratings:[],
-    info:{}
+    info:{},
+    cartFoods: []
   },
   mutations:{
     [RECERVE_GOODS](state,{goods}){
@@ -38,12 +40,20 @@ export default {
         // console.log(food.count+"----")
       }else{
         Vue.set(food,'count',1)
+        state.cartFoods.push(food)
       }
     },
     [REDUCE_FOOD_COUNT](state,food){
       if(food.count>0){
         food.count--
+        if(food.count === 0){
+          state.cartFoods.splice(state.cartFoods.indexOf(food),1)
+        }
       }
+    },
+    [DELETE_FOODS](state){
+      state.cartFoods.forEach(food => food.count = 0)
+      state.cartFoods = []
     }
   },
   actions:{
@@ -82,5 +92,14 @@ export default {
       }
     }
   },
-  getters:{}
+  getters:{
+    totalCount(state){
+      // return state.cartFoods.reduce((pre,food)=> pre + food.count,0)
+      
+      return state.cartFoods.reduce((pre, food) => pre + food.count, 0)
+    },
+    totalPrice(state){
+      return state.cartFoods.reduce((pre,food)=> pre + food.count*food.price,0)
+    },
+  }
 }

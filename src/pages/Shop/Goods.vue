@@ -82,7 +82,7 @@ import ShopCart from '@/components/ShopCart/ShopCart.vue'
       }
     },
     methods:{
-      initScrool(){
+      initScroll(){
         this.leftScroll = new BScroll(this.$refs.left,{
           click: true //分发click事件
         })
@@ -138,7 +138,7 @@ import ShopCart from '@/components/ShopCart/ShopCart.vue'
     watch:{
       goods(){
         this.$nextTick(()=>{
-          this.initScrool()
+          this.initScroll()
           this.initTops()
         })
       }

@@ -11,4 +11,5 @@ export const RECERVE_RATINGS ='recerve_ratings'
 export const RECERVE_INFO ='recerve_info'
 export const ADD_FOOD_COUNT ='add_food_count'
 export const REDUCE_FOOD_COUNT ='reduce_food_count'
+export const DELETE_FOODS = 'delete_foods'
 
