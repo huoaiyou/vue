@@ -1,18 +1,28 @@
 import Vue from 'vue'
 import VeeValidate from 'vee-validate'
+import VueLazyload from 'vue-lazyload'
 import App from './App.vue'
 import router from './router'
 import 'lib-flexible/flexible'
 import Header from './components/Header/Header.vue'
 import Score from './components/Score/Score.vue'
+import CartControl from './components/CartControl/CartControl.vue'
 import store from './vuex/store.js'
 import zh_CN from 'vee-validate/dist/locale/zh_CN'
 import i18n from './i18n'
 import * as API from '@/api'
 import './mock/mockServer.js'
+import loading from '@/common/images/loading.gif'
 
+Vue.config.productionTip = false
+Vue.component("Header",Header)
+Vue.component("Score",Score)
+Vue.component("CartControl",CartControl)
 Vue.prototype.$API = API
 Vue.use(VeeValidate)
+Vue.use(VueLazyload, {
+  loading,
+})
 
 VeeValidate.Validator.localize('zh_CN', {
   messages: zh_CN.messages,
@@ -32,9 +42,7 @@ VeeValidate.Validator.extend('mobile', {
   getMessage: field => field + '必须是11位手机号码'
 })
 
-Vue.config.productionTip = false
-Vue.component("Header",Header)
-Vue.component("Score",Score)
+
 new Vue({
   render: h => h(App),
   router,

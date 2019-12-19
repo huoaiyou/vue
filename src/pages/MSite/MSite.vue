@@ -128,7 +128,12 @@ import {mapState} from 'vuex'
       })
     },
     computed:{
-      ...mapState(['address','categorys','shops']),
+      // ...mapState(['address','categorys','shops']),
+      ...mapState({
+        address: state => state.msite.address,
+        categorys: state => state.msite.categorys,
+        shops: state => state.msite.shops,
+      }),
       //创建categorys二维数组
       categorysArr(){
         const {categorys} = this

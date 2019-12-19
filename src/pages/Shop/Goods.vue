@@ -2,7 +2,7 @@
 <div>
   <div class="goods">
     <div class="menu-wrapper" ref="left">
-      <ul>
+      <ul ref="leftUl">
         <li class="menu-item" v-for="(good,index) in goods" :key="index" 
         :class="{current:index === currentIndex}"  @click="switchRight(index)">
           <img class="icon" :src="good.icon" v-if="good.icon">
@@ -16,7 +16,7 @@
         <li class="food-list-hook" v-for="(good,index) in goods" :key="index">
           <h1 class="title">{{good.name}}</h1>
           <ul>
-            <li class="food-item bottom-border-1px" v-for="(food,index) in good.foods" :key="index" @click="aa"> 
+            <li class="food-item bottom-border-1px" v-for="(food,index) in good.foods" :key="index" @click="showFood(food)" > 
               <div class="icon">
                 <img width="57" height="57" :src="food.icon">
               </div>
@@ -30,7 +30,7 @@
                   <span class="now">￥{{food.price}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  CartControl组件
+                  <CartControl :food="food"/>
                 </div>
               </div>
             </li>
@@ -40,45 +40,71 @@
         
       </ul>
     </div>
+    <ShopCart :food="food"/>
   </div>
+  <Food :food="food" ref="food"/>
 </div>
 </template>
 
 <script type="text/ecmascript-6">
 import {mapState} from 'vuex'
 import BScroll from 'better-scroll'
+import Food from '@/components/Food/Food.vue'
+import ShopCart from '@/components/ShopCart/ShopCart.vue'
   export default {
     data(){
       return {
         tops: [], 
         scrollY: 0,
+        food: {}
       }
     },
     computed:{
-      ...mapState(['goods']),
+      // ...mapState(['goods']),
+      ...mapState({
+        goods: state => state.shop.goods
+      }),
       currentIndex(){
         const {scrollY,tops} = this
         // 返回滑动距离在范围内(右侧滑动左侧对应项所在的位置)的下标
-        return tops.findIndex((top,index)=> scrollY>=top && scrollY<tops[index+1])
+        const index = tops.findIndex((top,index)=> scrollY>=top && scrollY<tops[index+1])
+        // console.log(index);
+        if(this.index !== index && this.leftScroll){
+          this.index = index
+          
+          // console.log(scrollY);
+          
+          const li = this.$refs.leftUl.children[index]
+          this.leftScroll.scrollToElement(li,500)
+        }
+        
+        return index
       }
     },
     methods:{
       initScrool(){
-        new BScroll(this.$refs.left)
+        this.leftScroll = new BScroll(this.$refs.left,{
+          click: true //分发click事件
+        })
         this.rightScroll = new BScroll(this.$refs.right,{
-          probeType:1
+          probeType:1,
           // probeType:2 
           // probeType:3 
+          click: true 
         })
         //给右侧列表绑定scroll监听
         this.rightScroll.on('scroll',({x,y})=>{
           // console.log('scroll',x,y);
+          // let scrollY = Math.abs(y) 
+          // this.scrollY = scrollY          
           this.scrollY = Math.abs(y)          
         })
         //给右侧列表绑定scrollEnd监听
         this.rightScroll.on('scrollEnd',({x,y})=>{
           // console.log('scrollEnd',x,y);
-          this.scrollY = Math.abs(y)          
+          // let scrollY = Math.abs(y) 
+          // this.scrollY =  scrollY   
+          this.scrollY = Math.abs(y)              
         })
       },
       //获取右侧每项top的数组
@@ -93,16 +119,20 @@ import BScroll from 'better-scroll'
           tops.push(top)
         });
         this.tops = tops
+        // console.log(tops);
+        
       },
       switchRight (index){
         // console.log(index);
-        scrollY = - this.tops[index]
-        // console.log(scrollY);
-        this.rightScroll.scrollTo(0,scrollY,.5)
+        const top = this.tops[index]
+        // console.log(top);
+        this.scrollY = top
+        this.rightScroll.scrollTo(0,-top,300)
       },
-      aa(){
-        console.log('111111111111');
-        
+      showFood(food){
+        this.food = food
+        // console.log(this.food);
+        this.$refs.food.toggleShow()
       }
     },
     watch:{
@@ -112,6 +142,10 @@ import BScroll from 'better-scroll'
           this.initTops()
         })
       }
+    },
+    components:{
+      Food,
+      ShopCart,
     }
   }
 </script>

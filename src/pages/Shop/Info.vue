@@ -8,7 +8,10 @@ Info
 import {mapState} from 'vuex'
   export default {
     computed:{
-      ...mapState(['info'])
+      // ...mapState(['info'])
+      ...mapState({
+        info: state => state.stop.info
+      })
     }
   }
 </script>

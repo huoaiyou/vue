@@ -99,7 +99,10 @@ import { Button, MessageBox } from 'mint-ui';
 Vue.component(Button.name, Button);
   export default {
     computed:{
-      ...mapState(['user'])
+      // ...mapState(['user'])
+      ...mapState({
+        user: state => state.user.user
+      })
     },
     methods:{
       logout(){

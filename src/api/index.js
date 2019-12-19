@@ -19,7 +19,7 @@ export const reqSmsLogin = (phone,code) => ajax.post('/login_sms',{phone,code})
 export const reqPwdLogin = ({name,pwd,captcha}) => ajax.post('/login_pwd',{name,pwd,captcha})
 
 // 自动登录
-export const reqAutoLogin = () => ajax('/auto_login')
+export const reqAutoLogin = () => ajax.get('/auto_login')
 
 //mock商品列表
 export const reqGoods = () => ajax('/goods')

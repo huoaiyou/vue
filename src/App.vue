@@ -6,12 +6,12 @@
 </template>
 
 <script>
-import Footer from './components/Footer/Footer.vue'
+import Footer from '@/components/Footer/Footer.vue'
 export default {
   components: {
     Footer
   },
-  mounted(){
+  async mounted(){
     this.$store.dispatch('autoLogin')
   }
 }
